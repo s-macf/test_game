@@ -36,6 +36,7 @@ class Player:
             if self.velocity[1] > 0 and self.rect.colliderect(rect):
                 self.pos[1] = rect.top - self.rect.height
                 self.velocity[1] = 0
+                self.velocity[0] = 0
 
 
         self.velocity[1] = min(30, self.velocity[1] + 1)

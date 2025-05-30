@@ -12,6 +12,7 @@ class Game:
         self.scale_multiplier = 1
         self.world = Tilemap(self.display)
         self.player = Player(self.display, [600, 500], 16, self.world)
+        self.x_movement = [False, False]
 
     def run(self):
         running = True
@@ -21,7 +22,6 @@ class Game:
             self.screen.fill("black")
             self.display.fill("lightblue")
 
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -30,15 +30,21 @@ class Game:
                         self.scale_multiplier -= 0.1
                     if event.key == pygame.K_EQUALS:
                         self.scale_multiplier += 0.1
+                    if event.key == pygame.K_a:
+                        self.x_movement[0] = True
                     if event.key == pygame.K_d:
-                        self.player.velocity[0] = 1
+                        self.x_movement[1] = True
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE:
                         self.player.velocity[1] = velocity
+                        self.player.velocity = [(self.x_movement[1] - self.x_movement[0]) * 5, velocity]
                         velocity = 0
+                        self.x_movement = [False, False]
+                    if event.key == pygame.K_a:
+                        self.x_movement[0] = False
                     if event.key == pygame.K_d:
-                        self.player.velocity[0] = 0
+                        self.x_movement[1] = False
 
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 velocity = max(-20, velocity - 0.5)
