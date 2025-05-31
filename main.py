@@ -30,24 +30,40 @@ class Game:
                         self.scale_multiplier -= 0.1
                     if event.key == pygame.K_EQUALS:
                         self.scale_multiplier += 0.1
-                    if event.key == pygame.K_a:
-                        self.x_movement[0] = True
-                    if event.key == pygame.K_d:
-                        self.x_movement[1] = True
+                    # if event.key == pygame.K_a:
+                    #     self.x_movement[0] = True
+                    # if event.key == pygame.K_d:
+                    #     self.x_movement[1] = True
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE:
-                        self.player.velocity[1] = velocity
-                        self.player.velocity = [(self.x_movement[1] - self.x_movement[0]) * 5, velocity]
-                        velocity = 0
-                        self.x_movement = [False, False]
-                    if event.key == pygame.K_a:
-                        self.x_movement[0] = False
-                    if event.key == pygame.K_d:
-                        self.x_movement[1] = False
+                        if self.player.on_ground:
+                            self.player.on_ground = False
+
+                            test = 0
+                            if pygame.key.get_pressed()[pygame.K_a]:
+                                test = -5
+                            elif pygame.key.get_pressed()[pygame.K_d]:
+                                test = 5
+
+                            self.player.velocity = [test, velocity]
+                            velocity = 0
+                            self.x_movement = [False, False]
+                    # if event.key == pygame.K_a:
+                    #     self.x_movement[0] = False
+                    # if event.key == pygame.K_d:
+                    #     self.x_movement[1] = False
 
             if pygame.key.get_pressed()[pygame.K_SPACE]:
-                velocity = max(-20, velocity - 0.5)
+                velocity = max(-15, velocity - 0.5)
+
+            if not pygame.key.get_pressed()[pygame.K_SPACE] and self.player.on_ground:
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    self.player.velocity[0] = -2
+
+                if pygame.key.get_pressed()[pygame.K_d]:
+                    self.player.velocity[0] = 2
+
 
             self.world.render()
 

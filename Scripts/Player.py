@@ -13,6 +13,7 @@ class Player:
         self.image = self.load_player(tile_size)
         self.tilemap = tilemap
         self.velocity = [0, 0]
+        self.on_ground = False
 
     def load_player(self, tile_size):
         image = load_texture("./Assets/Characters/Basic Charakter Spritesheet.png", (1, 1), tile_size)
@@ -31,12 +32,17 @@ class Player:
         self.rect.left = self.pos[0]
         self.rect.top = self.pos[1]
 
-
         for rect in self.tilemap.objects["Ground"]:
-            if self.velocity[1] > 0 and self.rect.colliderect(rect):
-                self.pos[1] = rect.top - self.rect.height
-                self.velocity[1] = 0
-                self.velocity[0] = 0
+            if self.rect.colliderect(rect):
+                if self.rect.bottom > rect.top and self.rect.top < rect.top:
+                    self.pos[1] = rect.top - self.rect.height
+                    self.velocity[1] = 0
+                    self.velocity[0] = 0
+                    self.on_ground = True
+                elif self.rect.left < rect.right and self.rect.right > rect.right and self.rect.bottom > rect.top:
+                    self.pos[0] = rect.right
+                    self.velocity[0] *= -1
 
 
-        self.velocity[1] = min(30, self.velocity[1] + 1)
+
+        self.velocity[1] = min(20, self.velocity[1] + 0.6)
