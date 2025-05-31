@@ -14,6 +14,7 @@ class Player:
         self.tilemap = tilemap
         self.velocity = [0, 0]
         self.on_ground = False
+        self.previous_y_velocity = None
 
     def load_player(self, tile_size):
         image = load_texture("./Assets/Characters/Basic Charakter Spritesheet.png", (1, 1), tile_size)
@@ -24,6 +25,9 @@ class Player:
         self.surface.blit(self.image, self.pos)
 
     def update(self):
+        if self.velocity[1] == self.previous_y_velocity:
+            self.on_ground = False
+
         self.rect.width = 64
         self.rect.height = 64
         self.pos[1] += self.velocity[1] * 2
@@ -39,10 +43,14 @@ class Player:
                     self.velocity[1] = 0
                     self.velocity[0] = 0
                     self.on_ground = True
-                elif self.rect.left < rect.right and self.rect.right > rect.right and self.rect.bottom > rect.top:
+                elif self.rect.left < rect.right and self.rect.right > rect.right:
                     self.pos[0] = rect.right
-                    self.velocity[0] *= -1
+                    self.velocity[0] = (self.velocity[0] / 2) * -1
+                elif self.rect.right > rect.left and self.rect.left < rect.right:
+                    self.pos[0] = rect.left - self.rect.width
+                    self.velocity[0] = (self.velocity[0] / 2) * -1
 
 
 
         self.velocity[1] = min(20, self.velocity[1] + 0.6)
+        self.previous_y_velocity = self.velocity[1]
